@@ -13,3 +13,8 @@ function findMaxMin(arr) {
     }
      return { min, max }
 }
+
+function findMaxMinShort(arr){
+    // return [arr.sort()[0], arr.sort()[arr.length-1]];
+    return [Math.max(...arr), Math.min(...arr)];
+}
