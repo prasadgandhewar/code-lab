@@ -23,3 +23,7 @@ function isPalindrome(value) {
     }
     return false;
 }
+
+function isPalindromeShort(value){
+    return value === [...value].reverse();
+}
