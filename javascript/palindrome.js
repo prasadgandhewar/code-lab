@@ -25,5 +25,5 @@ function isPalindrome(value) {
 }
 
 function isPalindromeShort(value){
-    return value === [...value].reverse();
+    return value === [...value].reverse().join('')
 }
