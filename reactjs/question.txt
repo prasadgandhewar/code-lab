@@ -1,0 +1,5 @@
+Redux vs ContextAPI:
+1. Performance good in redux since context api re-render the consumers.
+2. Debugging better in redux.
+3. Support Middleware like redux-saga, thunk
+4. Centralized - redux.
