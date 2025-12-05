@@ -6,8 +6,5 @@ function add(a) {
     return inner;        // return itself for chaining
   }
 
-  inner.valueOf = () => sum;   // when JS tries to convert to number
-  inner.toString = () => sum;
-
   return inner;
 }
