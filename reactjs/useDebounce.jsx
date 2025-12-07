@@ -16,3 +16,19 @@ function useDebounce(timer, value) {
 
     return val;
 }
+
+// =========================================================================
+
+export function useDebounce(value, delay = 300) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => clearTimeout(timer); // cleanup on value change/unmount
+  }, [value, delay]);
+
+  return debouncedValue;
+}
