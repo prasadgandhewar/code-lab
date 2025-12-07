@@ -1,16 +1,2 @@
-Common leak patterns:
 
-Global references — unintentionally storing large objects on window or module global.
-Closures holding large objects — e.g., a long-lived closure keeps a large array alive.
-Detached DOM nodes — DOM elements removed from document but still referenced in JS.
-Timers and intervals — setInterval or timers not cleared.
-Event listeners — not removed when element/component unmounts (especially on nodes removed).
-Caches without eviction — Map/array caches that grow unbounded (use WeakMap/WeakRef if needed).
-
-Prevention:
-
-Unsubscribe listeners and clear intervals in useEffect cleanup or componentWillUnmount.
-Use WeakMap/WeakSet for caches keyed by objects.
-Limit cache size; implement eviction (LRU).
-Avoid storing DOM nodes in long-lived JS structures.
 --------------------------------------------------------------------------------------------------------------------------
