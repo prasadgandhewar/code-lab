@@ -1,0 +1,96 @@
+/*
+Requirements:
+- Fix the app so that the counter displays as 1->2->3->...
+- The counter should be shown in the center of the screen, with rounded border and a shadow.
+- When the timer appears, it should be animated [from the top of the page into the center].
+- The timer must be stoppable via window.app.stop().
+- run() must be safe:
+  all calls after the first one should be ignored if application was not manually stopped;
+- If an app instance already exists, new App() calls must return the same instance.
+- The main application loop [setInterval in App.run] must run every 100ms.
+  The UI must not render more often than once per 300ms, even if the main loop runs faster.
+  If the main loop runs slower than 300ms, the UI should match that slower pace.
+*/
+
+class Counter {
+  constructor() {
+    this.state = { value: 0 };
+  }
+
+  increment() {
+    this.state.value = ++this.state.value;
+  }
+}
+
+// ===========================================================
+class CounterLayout {
+  get target() {
+    return document.getElementById("timer");
+  }
+  render(counter) {
+    this.target.innerHTML = counter.state.value;
+  }
+}
+
+// ===========================================================
+class Emitter {
+  constructor() {
+    this.subscribers = [];
+  }
+
+  subscribe(sub) {
+    this.subscribers.push(sub);
+    const unsubscribe = () => {
+      this.subscribers = this.subscribers.filter((item) => item !== sub);
+    };
+    return unsubscribe;
+  }
+
+  notify() {
+    throw new Error("Not implemented");
+  }
+}
+
+// ===========================================================
+class UI extends Emitter {
+  constructor() {
+    super();
+    this.counter = new Counter();
+  }
+  recalculate() {
+    this.counter.increment();
+  }
+  notify() {
+    this.subscribers.forEach((subscriber) => {
+      subscriber.call(subscriber, { counter: this.counter });
+    });
+  }
+}
+
+// ===========================================================
+class App {
+  constructor() {
+    this.ui = new UI();
+    this.counterLayout = new CounterLayout();
+    this.ui.subscribe(({ counter }) => this.counterLayout.render(counter));
+  }
+
+  run(freq = 100) {
+    window.setInterval(() => {
+      this.ui.recalculate();
+      this.ui.notify();
+      // Other things we can do in the main loop...
+    }, freq);
+  }
+
+  stop() {
+    throw new Error("Not implemented");
+  }
+}
+
+// ===========================================================
+const app = new App();
+app.run();
+
+
+//https://codesandbox.io/p/live/7bdc6cad-dcad-4e32-82b6-db38e172243f?file=%2Fsrc%2Findex.mjs%3A1%2C1-94%2C1
