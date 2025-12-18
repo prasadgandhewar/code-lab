@@ -111,4 +111,24 @@
 
 35. How to create style design system
 
-36
+36. What is clouser
+    A closure is when a function remembers variables from where it was created,
+    even after that outer function has finished running.
+
+    ✅ Function inside another function
+    ✅ Inner function uses outer variables
+    ✅ Outer function has already returned
+    Enforced encapsulation without classes
+
+    function outer() {
+        let message = "Hello";
+
+        function inner() {
+            console.log(message);
+        }
+
+        return inner;
+    }
+
+    const fn = outer(); // outer() finishes here
+    fn();               // "Hello"

@@ -1,5 +1,5 @@
 function sumAllEven(arr) {
-    const flatarr = flatArray2(arr);
+    const flatarr = arr.flat(Infinity); // flatArray2(arr);
     console.log(flatarr);
 
     return flatarr.reduce((preVal, currVal) => {
@@ -19,5 +19,9 @@ function flatArray(arr, finalarr = []) {
 
 }
 
-
+function flatArray2(arr) {
+    return arr.reduce((acc, curr, index) => {
+        return acc.concat(Array.isArray(curr) ? flatArray2(curr) : curr);
+    }, [])
+}
 console.log(sumAllEven([1, 2, [3, 4, [5, 6, [7, 8]]]]))

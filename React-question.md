@@ -240,3 +240,115 @@ Prioritize input updates
 
     Interview bonus:
     👉 “For large apps, I’d delegate this to React Query instead of rolling my own.”
+
+13. createSlice & createAsyncThunk
+    2️⃣ createAsyncThunk
+    createAsyncThunk is a standardized async action generator.
+
+    It automatically creates 3 lifecycle actions:
+
+    Stage	Action
+    Start	pending
+    Success	fulfilled
+    Failure	rejected
+    Basic Example
+    import { createAsyncThunk } from '@reduxjs/toolkit';
+
+    export const fetchUsers = createAsyncThunk(
+    'users/fetchUsers',
+        async (_, thunkAPI) => {
+            const res = await fetch('/api/users');
+            return res.json();
+        }
+    );
+
+
+    This creates:
+
+    fetchUsers.pending
+
+    fetchUsers.fulfilled
+
+    fetchUsers.rejected
+
+    How Thunk Works (Under the Hood)
+    dispatch(fetchUsers());
+
+
+    RTK dispatches internally:
+
+    users/fetchUsers/pending
+
+    runs async function
+
+    on success → fulfilled(payload)
+
+    on error → rejected(error)
+
+    Handling Errors Properly (Senior-level)
+    ❌ Common junior mistake
+    throw new Error('Failed');
+
+
+    Produces:
+
+    generic error
+
+    payload is undefined
+
+    ✅ Correct Way: rejectWithValue
+        export const fetchUsers = createAsyncThunk(
+        'users/fetch',
+        async (_, { rejectWithValue }) => {
+            try {
+            const res = await fetch('/api/users');
+            if (!res.ok) throw new Error('API failed');
+            return await res.json();
+            } catch (err) {
+            return rejectWithValue(err.message);
+            }
+        }
+        );
+
+
+    In reducer:
+
+        .addCase(fetchUsers.rejected, (state, action) => {
+        state.error = action.payload; // ✅ custom error
+        });
+
+    Using thunkAPI (Interview favorite)
+        async (arg, thunkAPI) => {
+            const { dispatch, getState, signal } = thunkAPI;
+
+            const token = getState().auth.token;
+
+            const res = await fetch('/api/data', {
+                headers: { Authorization: `Bearer ${token}` },
+                signal
+            });
+
+            return res.json();
+        }
+
+    Available helpers:
+    Name	Purpose
+    dispatch	Dispatch other actions
+    getState	Access current state
+    rejectWithValue	Custom error
+    signal	Abort request
+    requestId	Tracking request
+    extra	Injected dependencies
+
+14. Large forms optimization
+    - Split into smaller form or field and use useMemo/callback
+    - use ref for form with more than 50 fields. (hybrid approach state + ref)
+    - 
+
+15. Code splitting (lazy, Suspense)
+    const settingPage = React.lazy(() => import('/setting'))
+
+16. Feature-first vs layer-first structure
+    Feature-first is better for scaling
+
+    
